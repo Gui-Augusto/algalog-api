@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 import com.algaworks.algalog.domain.model.Cliente;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long>{
-	
-	List<Cliente> findByNome(String nome);
-	List<Cliente> findByNomeContaining(String nome);
-	Optional<Cliente> findByEmail(String email);
-	
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+
+    List<Cliente> findByNome(String nome);
+
+    List<Cliente> findByNomeContaining(String nome);
+
+    Optional<Cliente> findByEmail(String email);
+
 }

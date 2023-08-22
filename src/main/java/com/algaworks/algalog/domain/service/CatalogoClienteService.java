@@ -15,9 +15,8 @@ public class CatalogoClienteService {
 
     @Transactional
     public Cliente salvar(Cliente cliente){
-        boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail())
-                .stream()
-                .anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
+        boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail()).isPresent();
+
 
         if(emailEmUso){
             throw new NegocioException("Já existe um cliente cadastrado com ese e-mail");

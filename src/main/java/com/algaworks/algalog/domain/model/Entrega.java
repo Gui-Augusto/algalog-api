@@ -1,9 +1,15 @@
 package com.algaworks.algalog.domain.model;
 
+import com.algaworks.algalog.domain.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -20,12 +26,18 @@ public class Entrega {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Valid
+    @ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
+    @NotNull
     @ManyToOne
     private Cliente cliente;
 
+    @Valid
+    @NotNull
     @Embedded
     private Destinatario destinatario;
 
+    @NotNull
     private BigDecimal taxa;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

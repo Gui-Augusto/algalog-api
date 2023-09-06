@@ -28,7 +28,6 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-
     private ClienteRepository clienteRepository;
     private CatalogoClienteService catalogoClienteService;
 

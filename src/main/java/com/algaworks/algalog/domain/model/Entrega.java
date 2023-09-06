@@ -1,6 +1,7 @@
 package com.algaworks.algalog.domain.model;
 
 import com.algaworks.algalog.domain.ValidationGroups;
+import com.algaworks.algalog.domain.exception.NegocioException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -15,6 +16,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,10 +38,41 @@ public class Entrega {
 
     private BigDecimal taxa;
 
+    @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL)
+    private List<Ocorrencia> ocorrencias = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private StatusEntrega status;
 
     private OffsetDateTime dataPedido;
 
     private OffsetDateTime dataFinalizacao;
+
+    public Ocorrencia AdicionarOcorrencia(String descricao) {
+        Ocorrencia ocorrencia = new Ocorrencia();
+        ocorrencia.setDescricao(descricao);
+        ocorrencia.setDataRegistro(OffsetDateTime.now());
+        ocorrencia.setEntrega(this);
+
+        this.getOcorrencias().add(ocorrencia);
+
+        return ocorrencia;
+    }
+
+    public void finalizar() {
+        if(naoPodeSerFinalizado()){
+            throw new NegocioException("Entrega não pode ser finalizada");
+        }
+
+        setStatus(StatusEntrega.FINALIZADA);
+        setDataFinalizacao(OffsetDateTime.now());
+    }
+
+    public boolean podeSerFinalizada(){
+        return StatusEntrega.PENDENTE.equals(getStatus());
+    }
+
+    public boolean naoPodeSerFinalizado(){
+        return !podeSerFinalizada();
+    }
 }
